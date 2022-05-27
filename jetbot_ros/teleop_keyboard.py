@@ -38,6 +38,7 @@ import os
 import select
 import sys
 import rclpy
+import time
 
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
@@ -51,11 +52,11 @@ else:
     import termios
     import tty
 
-JETBOT_MAX_LIN_VEL = 0.2    # parameter /jetbot/teleop_keyboard/max_linear_vel   (.63172 for real JetBot)
-JETBOT_MAX_ANG_VEL = 2.0    # parameter /jetbot/teleop_keyboard/max_angular_vel  (12.5 for real JetBot)
+JETBOT_MAX_LIN_VEL = 1.0 #xavier -Rover 5    # parameter /jetbot/teleop_keyboard/max_linear_vel   (.63172 for real JetBot)
+JETBOT_MAX_ANG_VEL = 10.0    # parameter /jetbot/teleop_keyboard/max_angular_vel  (12.5 for real JetBot)
 
 LIN_VEL_STEP_SIZE = 0.01
-ANG_VEL_STEP_SIZE = 0.1
+ANG_VEL_STEP_SIZE = 0.3
 
 msg = """
 Control Your JetBot!
@@ -167,7 +168,8 @@ def main():
     node.add_on_set_parameters_callback(parameters_callback)
     
     print('JETBOT_MAX_LIN_VEL', JETBOT_MAX_LIN_VEL)
-    
+    time.sleep(2)
+
     status = 0
     target_linear_velocity = 0.0
     target_angular_velocity = 0.0
@@ -175,8 +177,10 @@ def main():
     control_angular_velocity = 0.0
 
     try:
-        print(msg)
         while(1):
+            print(msg)
+            print_vels(target_linear_velocity, target_angular_velocity)
+
             key = get_key(settings)
             
             if len(key) > 0:
@@ -187,27 +191,18 @@ def main():
             if key == 'w':
                 target_linear_velocity =\
                     check_linear_limit_velocity(target_linear_velocity + LIN_VEL_STEP_SIZE)
-                #status = status + 1
-                print_vels(target_linear_velocity, target_angular_velocity)
             elif key == 'x':
                 target_linear_velocity =\
                     check_linear_limit_velocity(target_linear_velocity - LIN_VEL_STEP_SIZE)
-                #status = status + 1
-                print_vels(target_linear_velocity, target_angular_velocity)
             elif key == 'a':
                 target_angular_velocity =\
                     check_angular_limit_velocity(target_angular_velocity + ANG_VEL_STEP_SIZE)
-                #status = status + 1
-                print_vels(target_linear_velocity, target_angular_velocity)
             elif key == 'd':
                 target_angular_velocity =\
                     check_angular_limit_velocity(target_angular_velocity - ANG_VEL_STEP_SIZE)
-                #status = status + 1
-                print_vels(target_linear_velocity, target_angular_velocity)
             elif key == ' ' or key == 's':
                 target_linear_velocity = 0.0
                 target_angular_velocity = 0.0
-                print_vels(target_linear_velocity, target_angular_velocity)
             else:
                 if (key == '\x03'):
                     break
@@ -215,7 +210,7 @@ def main():
             status += 1
             
             if status == 20:
-                print(msg)
+                #print(msg)
                 status = 0
 
             twist = Twist()
@@ -238,8 +233,10 @@ def main():
             twist.angular.y = 0.0
             twist.angular.z = float(control_angular_velocity)
 
-            print_vels(control_linear_velocity, control_angular_velocity)
+
             pub.publish(twist)
+            os.system('clear')
+
 
     except Exception as e:
         print(e)
@@ -256,8 +253,10 @@ def main():
 
         pub.publish(twist)
 
+
         if os.name != 'nt':
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+
 
 
 if __name__ == '__main__':
