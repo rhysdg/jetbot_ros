@@ -88,3 +88,12 @@ ros2 launch jetbot_ros nav_model.launch.py model:=/workspace/src/jetbot_ros/data
 
 <a href="https://youtu.be/gok9pvUzZeY" target="_blank"><img src=https://github.com/dusty-nv/jetbot_ros/raw/dev/docs/images/jetbot_gazebo_sim_video.jpg width="750"></a>
 
+
+
+### Changes in this fork currently
+
+- Pretty clunky support for Xavier Nx - Ubuntu 20.04 Foxy (Jetpack 5.01 Developer Preview)
+- I2C bus = 8, dropped OLED etc until argparse is built in
+- Installed lxterminal with - https://github.com/jetsonhacks/installLXDE
+- touch ~/.Xauthority
+
