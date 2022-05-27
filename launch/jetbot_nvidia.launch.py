@@ -2,6 +2,9 @@
 # Launch NVIDIA JetBot motor controller and camera nodes.
 # This is for the original NVIDIA JetBot.
 #
+
+# to do - Add argparse instead of dropping oled etc
+#
 import os
 
 from launch import LaunchDescription
