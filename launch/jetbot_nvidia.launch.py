@@ -46,8 +46,5 @@ def generate_launch_description():
                         
     return LaunchDescription([
         motor_controller,
-        oled_controller,
-        rtp_output,
-        video_source,
-        video_output
+        rtp_output
     ])
