@@ -14,9 +14,9 @@ class MotorControllerNV(MotorController):
     
     def __init__(self):
         super().__init__()
-        
+        #bus 8 xavier nx
         # open Adafruit MotorHAT driver
-        self.driver = Adafruit_MotorHAT(i2c_bus=1)
+        self.driver = Adafruit_MotorHAT(i2c_bus=8)
         
         # get motor objects from driver
         self.motors = {
